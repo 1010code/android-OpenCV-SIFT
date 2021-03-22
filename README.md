@@ -51,7 +51,7 @@ defaultConfig {
 ![](./screenshot/img10.png)
 
 ## Step 5: 新增Native Libraries
-將 `\OpenCV-android-sdk\sdk\native\libs`中的 `armeabi-v7a` 與 `x86` 檔案複製到 `\app\libs` 下，常見通常都需要這兩個CPU類型。前者是現在手機目前主流架構 arm7，後者是給開發者在模擬器上除錯執行用。直到目前為止，Android 共有7種不同的 cpu 分別為 ARMv5，ARMv7（從2010年起）x86（從2011年起）MIPS（從2012年起）ARMv8，MIPS64 和 x86_64（從2014年起）。為了支援這些 cup 我們就需要包相對應的 so 檔進 apk 裡。
+將最早下載的 `\OpenCV-android-sdk\sdk\native\libs`中的 `armeabi-v7a` 與 `x86` 檔案複製到 `\app\libs` 下，常見通常都需要這兩個 CPU 類型。前者是現在手機目前主流架構 arm7，後者是給開發者在模擬器上除錯執行用。直到目前為止，Android 共有7種不同的 CPU 分別為 ARMv5，ARMv7（從2010年起）x86（從2011年起）MIPS（從2012年起）ARMv8，MIPS64 和 x86_64（從2014年起）。為了支援這些 CPU 我們就需要包相對應的 so 檔進 apk 裡。
 
 ![](./screenshot/img11.png)
 
@@ -67,21 +67,45 @@ sourceSets{
 
 ![](./screenshot/img12.png)
 
-## !!!
+## activity_main.xml
+加入一個 `ImageView` 顯示 SIFT 特徵選取後的定位點結果。
 
-如果編譯執行後發生以下錯誤訊息:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-> java.lang.UnsatisfiedLinkError: dlopen failed: library "libc++_shared.so" not found
+    <TextView
+        android:id="@+id/sample_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-解決方式: 在build.gradle(app) 的 cmake 增加:
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/sample_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.641"
+        app:srcCompat="@drawable/ic_launcher_background" />
 
+</androidx.constraintlayout.widget.ConstraintLayout>
 ```
-cmake {
-    arguments "-DANDROID_STL=c++_shared"
-}
-```
 
-## 完整MainActivity.java
+## 完整 MainActivity.java
+變數 `inputImage` 可以隨意替換 drawable 資料夾中的任一圖片。下一步驟教各位如何開啟資料夾並放自己的相片。
 
 ```java
 import androidx.appcompat.app.AppCompatActivity;
@@ -108,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ImageView imageView;
-    private Bitmap inputImage, targetImage; // make bitmap from image resource
+    // make bitmap from image resource
+    private Bitmap inputImage; 
     private SIFT sift = SIFT.create();
 
     @Override
@@ -140,5 +165,24 @@ public class MainActivity extends AppCompatActivity {
      * which is packaged with this application.
      */
     public native String stringFromJNI();
+}
+```
+
+## 加入測試圖片
+打開 app > src > main > res > drawable ，將測試圖片放到此資料夾中。
+
+![](./screenshot/img13.png)
+
+## 錯誤排除
+
+如果編譯執行後發生以下錯誤訊息:
+
+> java.lang.UnsatisfiedLinkError: dlopen failed: library "libc++_shared.so" not found
+
+解決方式: 在build.gradle(app) 的 cmake 增加:
+
+```
+cmake {
+    arguments "-DANDROID_STL=c++_shared"
 }
 ```

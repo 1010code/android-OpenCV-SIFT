@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ImageView imageView;
-    private Bitmap inputImage, targetImage; // make bitmap from image resource
+    private Bitmap inputImage; // make bitmap from image resource
     private SIFT sift = SIFT.create();
 
     @Override
