@@ -1,6 +1,8 @@
 # android-OpenCV-SIFT
 此範例透過 Android Native C++ 與 OpenCV 4.5.1 來執行電腦視覺專案。將會以 2020 年開源的 SIFT 演算法來計算圖片的特徵點。
 
+<img src="./screenshot/img14.png" width=250>
+
 ## Step 1: 建立專案
 開啟 Android Studio 建立一個以 Android Native C++ 為基底的專案。這一個選項他會建構一個 C/C++ 環境能夠透過 JNI (Java Native Interface) ，執行呼叫 C/C++ 語言的程式。
 
@@ -186,3 +188,8 @@ cmake {
     arguments "-DANDROID_STL=c++_shared"
 }
 ```
+
+## Reference
+- [Android studio載入OpenCV 4.3 module](https://hjwang520.pixnet.net/blog/post/404969512-android-studio%E8%BC%89%E5%85%A5opencv-4.3-module)
+- [How to configure OpenCV in Android Studio 4.1 or higher](https://www.youtube.com/watch?v=-0Yx1UzozzQ)
+- [OpenCV Android Installation + SIFT Tutorial 2016 EASY](https://www.youtube.com/watch?v=cLK9CjQ-pNI)
