@@ -54,3 +54,91 @@ defaultConfig {
 將 `\OpenCV-android-sdk\sdk\native\libs`中的 `armeabi-v7a` 與 `x86` 檔案複製到 `\app\libs` 下，常見通常都需要這兩個CPU類型。前者是現在手機目前主流架構 arm7，後者是給開發者在模擬器上除錯執行用。直到目前為止，Android 共有7種不同的 cpu 分別為 ARMv5，ARMv7（從2010年起）x86（從2011年起）MIPS（從2012年起）ARMv8，MIPS64 和 x86_64（從2014年起）。為了支援這些 cup 我們就需要包相對應的 so 檔進 apk 裡。
 
 ![](./screenshot/img11.png)
+
+接下來指定 `jniLibs` 路徑，開啟 app 的 build.gradle，增加:
+
+```
+sourceSets{
+    main {
+        jniLibs.srcDirs = ['libs']
+    }
+}
+```
+
+![](./screenshot/img12.png)
+
+## !!!
+
+如果編譯執行後發生以下錯誤訊息:
+
+> java.lang.UnsatisfiedLinkError: dlopen failed: library "libc++_shared.so" not found
+
+解決方式: 在build.gradle(app) 的 cmake 增加:
+
+```
+cmake {
+    arguments "-DANDROID_STL=c++_shared"
+}
+```
+
+## 完整MainActivity.java
+
+```java
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.Features2d;
+import org.opencv.features2d.SIFT;
+import org.opencv.imgproc.Imgproc;
+
+public class MainActivity extends AppCompatActivity {
+
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+        System.loadLibrary("opencv_java4");
+    }
+
+    private ImageView imageView;
+    private Bitmap inputImage, targetImage; // make bitmap from image resource
+    private SIFT sift = SIFT.create();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Example of a call to a native method
+        TextView tv = findViewById(R.id.sample_text);
+        tv.setText(stringFromJNI());
+
+        inputImage = BitmapFactory.decodeResource(getResources(), R.drawable.coca_cola);
+        imageView = (ImageView) this.findViewById(R.id.imageView);
+        sift();
+    }
+    public void sift() {
+        Mat rgba = new Mat();
+        Utils.bitmapToMat(inputImage, rgba);
+        MatOfKeyPoint keyPoints = new MatOfKeyPoint();
+        Imgproc.cvtColor(rgba, rgba, Imgproc.COLOR_RGBA2GRAY);
+        sift.detect(rgba, keyPoints);
+        Features2d.drawKeypoints(rgba, keyPoints, rgba);
+        Utils.matToBitmap(rgba, inputImage);
+        imageView.setImageBitmap(inputImage);
+    }
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native String stringFromJNI();
+}
+```
