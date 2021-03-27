@@ -4,7 +4,7 @@
 ![](./screenshot/img14.png)
 
 ## YouTube Tutorial
-[<img src="./screenshot/cover.jpg" width="450px">](https://youtu.be/rIu-mHX_MXM)
+[<img src="./screenshot/cover.jpg" width="550px">](https://youtu.be/rIu-mHX_MXM)
 
 ## Step 1: 建立專案
 開啟 Android Studio 建立一個以 Android Native C++ 為基底的專案。這一個選項他會建構一個 C/C++ 環境能夠透過 JNI (Java Native Interface) ，執行呼叫 C/C++ 語言的程式。
