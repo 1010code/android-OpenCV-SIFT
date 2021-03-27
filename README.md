@@ -3,7 +3,8 @@
 
 ![](./screenshot/img14.png)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rIu-mHX_MXM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+## YouTube Tutorial
+[![](./screenshot/cover.jpg)](https://youtu.be/rIu-mHX_MXM)
 
 ## Step 1: 建立專案
 開啟 Android Studio 建立一個以 Android Native C++ 為基底的專案。這一個選項他會建構一個 C/C++ 環境能夠透過 JNI (Java Native Interface) ，執行呼叫 C/C++ 語言的程式。
